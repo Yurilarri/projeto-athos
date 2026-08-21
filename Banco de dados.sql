@@ -1,0 +1,1 @@
+CREATE DATABASE athos_db;

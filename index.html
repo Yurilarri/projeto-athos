@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Athos Assessoria & Serviços Corporativos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- SweetAlert2 para os alertas profissionais -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { -webkit-tap-highlight-color: transparent; }
+    
+    .glass-header {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .tab-content {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .tab-content.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: tabEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes tabEnter {
+      0% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-btn { position: relative; }
+    .nav-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      width: 0; height: 2px;
+      background-color: #dc2626;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-btn.active { color: #dc2626; }
+    .nav-btn.active::after { width: 100%; }
+
+    .bg-parallax {
+      background-image: url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2000&auto=format&fit=crop');
+      background-attachment: fixed;
+      background-position: center top;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Topbar Contato -->
+  <div class="bg-slate-950 text-slate-300 text-[11px] font-medium py-2 px-6 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <a href="tel:+558531031104" class="flex items-center gap-1.5 hover:text-white transition-colors"><i data-lucide="phone" class="w-3.5 h-3.5 text-red-500"></i> (85) 3103-1104</a>
+        <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-red-500"></i> Seg a Sex: 08h às 17h</span>
+        <a href="https://www.google.com/maps/search/?api=1&query=Rua+Edgar+Pinho+Filho,+360,+Vila+União,+Fortaleza+-+Ceará" target="_blank" class="hidden md:flex items-center gap-1.5 hover:text-white transition-colors"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-500"></i> Fortaleza/CE</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#denuncia" onclick="mudarAba('denuncia')" class="hover:text-red-400 transition-colors">Canal Ético</a>
+        <span class="text-slate-700">|</span>
+        <a href="#transparencia" onclick="mudarAba('transparencia')" class="hover:text-red-400 transition-colors">Transparência</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header & Navegação -->
+  <header class="sticky top-0 z-50 glass-header border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
+      <a href="#inicio" onclick="mudarAba('inicio')" class="flex-shrink-0 group flex items-center gap-3">
+        <img src="https://athosassessoriaeservicos.com.br/wp-content/uploads/2024/04/cropped-ATHOS-LOGO-2.png" alt="Athos" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+      </a>
+
+      <nav class="flex-1 overflow-x-auto no-scrollbar lg:overflow-visible">
+        <div class="flex items-center lg:justify-center space-x-6 lg:space-x-8 text-[13px] font-bold text-slate-600 whitespace-nowrap px-2">
+          <a href="#inicio" onclick="mudarAba('inicio')" class="nav-btn py-7 transition-colors hover:text-red-600 active" data-tab="inicio">SOBRE NÓS</a>
+          <a href="#contato" onclick="mudarAba('contato')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="contato">CONTATO</a>
+          <a href="#transparencia" onclick="mudarAba('transparencia')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="transparencia">TRANSPARÊNCIA</a>
+          <a href="#denuncia" onclick="mudarAba('denuncia')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="denuncia">DENÚNCIA</a>
+          <a href="#vagas" onclick="mudarAba('vagas')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="vagas">VAGAS</a>
+          <a href="#colaborador" onclick="mudarAba('colaborador')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="colaborador">COLABORADOR</a>
+        </div>
+      </nav>
+
+      <div class="hidden lg:flex items-center flex-shrink-0">
+        <a href="#vagas" onclick="mudarAba('vagas')" class="px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg shadow-red-600/25 transition-all flex items-center gap-2">
+          <i data-lucide="briefcase" class="w-4 h-4"></i>
+          <span>Trabalhe Conosco</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== CONTAINER DE PÁGINAS ==================== -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- 1. PÁGINA INÍCIO -->
+    <main id="tab-inicio" class="tab-content active flex-1">
+      <section class="relative bg-parallax overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/60 mix-blend-multiply"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-50 via-slate-900/40 to-transparent"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 py-32 md:py-40 text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-widest uppercase mb-6">
+            <i data-lucide="award" class="w-4 h-4 text-red-500"></i>
+            <span>Referência em Terceirização</span>
+          </div>
+          
+          <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1]">
+            Excelência em Mão de Obra e <br class="hidden md:block" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">Assessoria Especializada</span>
+          </h1>
+          
+          <p class="mt-6 text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto font-light">
+            Soluções corporativas completas para condomínios, indústrias e empresas com rigor técnico, conformidade e gestão humana.
+          </p>
+
+          <div class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#vagas" onclick="mudarAba('vagas')" class="px-8 py-4 bg-red-600 hover:bg-red-500 text-white font-bold text-sm rounded-xl shadow-xl shadow-red-600/30 transition-all flex items-center justify-center gap-2">
+              Ver Vagas Disponíveis <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="#contato" onclick="mudarAba('contato')" class="px-8 py-4 bg-white hover:bg-slate-50 text-slate-900 font-bold text-sm rounded-xl shadow-xl transition-all flex items-center justify-center gap-2">
+              Falar com Comercial
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="max-w-7xl mx-auto px-6 relative z-20 -mt-16 mb-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="bg-white p-10 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 group hover:-translate-y-1 transition-transform duration-300">
+            <div class="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+              <i data-lucide="target" class="w-7 h-7"></i>
+            </div>
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Nossa Missão</h2>
+            <p class="text-slate-600 text-lg leading-relaxed">
+              Atender as necessidades dos clientes desenvolvendo um relacionamento de longo prazo de forma ética, alinhada aos interesses de ambas as partes, valorizando o contrato e o contratado.
+            </p>
+          </div>
+
+          <div class="bg-white p-10 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 group hover:-translate-y-1 transition-transform duration-300">
+            <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+              <i data-lucide="eye" class="w-7 h-7"></i>
+            </div>
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Nossa Visão</h2>
+            <p class="text-slate-600 text-lg leading-relaxed">
+              Ser reconhecida no mercado corporativo como uma das melhores empresas de Terceirização no Brasil, entregando excelência, qualidade e total credibilidade nos serviços prestados.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 2. PÁGINA CONTATO -->
+    <main id="tab-contato" class="tab-content flex-1 max-w-7xl mx-auto px-6 py-16 w-full">
+      <div class="mb-12">
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight">Envie sua mensagem</h1>
+        <p class="text-slate-500 text-lg mt-2">Nossa equipe comercial retornará o mais breve possível.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Formulário integrado com API Spring Boot -->
+        <div class="lg:col-span-7 bg-white p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+          <form onsubmit="enviarMensagem(event)" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Nome</label>
+                <input type="text" id="inputNome" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Sobrenome</label>
+                <input type="text" id="inputSobrenome" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Sua Mensagem</label>
+              <textarea id="inputMensagem" required rows="5" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm resize-none"></textarea>
+            </div>
+            <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition-all shadow-lg">
+              Enviar Mensagem
+            </button>
+          </form>
+        </div>
+
+        <!-- Cards Interativos de Localização e Telefone -->
+        <div class="lg:col-span-5 space-y-6">
+          <a href="https://www.google.com/maps/search/?api=1&query=Rua+Edgar+Pinho+Filho,+360,+Vila+União,+Fortaleza+-+Ceará" target="_blank" class="group bg-white p-8 rounded-3xl shadow-lg shadow-slate-200/40 border border-slate-100 flex gap-6 hover:border-red-300 hover:shadow-xl transition-all cursor-pointer block">
+            <div class="w-16 h-16 rounded-2xl bg-[#fff0f0] text-[#c92a2a] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="map-pin" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-2">Localização</h3>
+              <p class="text-slate-600 text-[15px] leading-relaxed">Rua Edgar Pinho Filho, 360<br>Vila União<br>Fortaleza – Ceará</p>
+            </div>
+          </a>
+
+          <a href="tel:+558531031104" class="group bg-white p-8 rounded-3xl shadow-lg shadow-slate-200/40 border border-slate-100 flex gap-6 hover:border-red-300 hover:shadow-xl transition-all cursor-pointer block">
+            <div class="w-16 h-16 rounded-2xl bg-[#fff0f0] text-[#c92a2a] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <i data-lucide="phone" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900 mb-1">Contato Direto</h3>
+              <p class="text-slate-900 font-black text-3xl tracking-tight mt-1 mb-2">(85) 3103-1104</p>
+              <p class="text-slate-500 text-sm">Seg a Sex, 08:00 - 17:00 hs</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- 3. PÁGINA TRANSPARÊNCIA -->
+    <main id="tab-transparencia" class="tab-content flex-1 max-w-6xl mx-auto px-6 py-16 w-full">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight">Transparência & Governança</h1>
+        <p class="text-slate-600 text-lg mt-4 leading-relaxed">
+          O que praticamos, disponibilizamos de forma democrática. Nossa cultura exige ética, igualdade e responsabilidade corporativa aberta a todos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <script>
+          const docs = [
+            { title: "Nosso Código de Conduta", icon: "file-text" },
+            { title: "Medidas Disciplinares", icon: "shield" },
+            { title: "Organograma Athos", icon: "network" },
+            { title: "Transparência Salarial 1º Sem/2024", icon: "download" },
+            { title: "Transparência Salarial 2º Sem/2024", icon: "download" },
+            { title: "Transparência Salarial 1º Sem/2025", icon: "download" },
+            { title: "Transparência Salarial 2º Sem/2025", icon: "download" },
+            { title: "Declaração de Igualdade 2º Sem/2025", icon: "file-check" },
+            { title: "Transparência Salarial 1º Sem/2026", icon: "download" }
+          ];
+          
+          docs.forEach(doc => {
+            document.write(`
+              <a href="#" class="group p-6 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between">
+                <span class="text-sm font-bold text-slate-700 group-hover:text-red-600 transition-colors">${doc.title}</span>
+                <div class="w-10 h-10 rounded-full bg-slate-50 group-hover:bg-red-50 flex items-center justify-center transition-colors shrink-0">
+                  <i data-lucide="${doc.icon}" class="w-4 h-4 text-slate-400 group-hover:text-red-600"></i>
+                </div>
+              </a>
+            `);
+          });
+        </script>
+      </div>
+    </main>
+
+    <!-- 4. PÁGINA CANAL DE DENÚNCIA -->
+    <main id="tab-denuncia" class="tab-content flex-1 max-w-4xl mx-auto px-6 py-16 w-full">
+      <div class="bg-white p-8 sm:p-14 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+        <div class="flex flex-col items-center text-center mb-10">
+          <div class="w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
+            <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-black text-slate-900">Canal de Denúncia Ética</h1>
+          <p class="text-slate-600 mt-4 max-w-2xl text-sm sm:text-base">
+            Ambiente seguro, sigiloso e independente. A Athos garante o anonimato e proíbe retaliações a denunciantes de boa-fé.
+          </p>
+        </div>
+
+        <form class="space-y-8">
+          <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Identificação (Opcional)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <input type="text" placeholder="Nome Completo" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="tel" placeholder="Telefone" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="text" placeholder="CPF" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="email" placeholder="E-mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Motivo da Denúncia *</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <script>
+                ['Fraude / Corrupção', 'Improbidade Administrativa', 'Assédio Moral / Sexual', 'Descumprimento de Normas', 'Conflito de Interesses', 'Outros'].forEach(tipo => {
+                  document.write(`
+                    <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
+                      <input type="radio" name="motivo" class="w-4 h-4 accent-red-600">
+                      <span class="text-sm text-slate-700 font-medium">${tipo}</span>
+                    </label>
+                  `);
+                });
+              </script>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Relato do Fato *</h3>
+            <textarea required rows="6" placeholder="Descreva os detalhes: o que aconteceu, quem estava envolvido, quando e onde ocorreu..." class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 outline-none text-sm resize-none"></textarea>
+          </div>
+
+          <button type="button" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/30 transition-all flex justify-center items-center gap-2">
+            <i data-lucide="lock" class="w-4 h-4"></i> Enviar Denúncia de Forma Segura
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- 5. PÁGINA VAGAS / OPORTUNIDADES -->
+    <main id="tab-vagas" class="tab-content flex-1 max-w-5xl mx-auto px-6 py-16 w-full">
+      <div class="mb-12">
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight">Oportunidades em Aberto</h1>
+        <p class="text-slate-600 text-lg mt-2">Venha fazer parte da equipe Athos. Estamos contratando no Ceará.</p>
+      </div>
+
+      <div class="space-y-6">
+        <script>
+          const vagas = [
+            { titulo: "Médico Clínico Geral", sal: "R$ 10.301,33", desc: "Realizar consultas e atendimentos médicos; coordenar programas de saúde e perícias médicas.", req: "Medicina" },
+            { titulo: "Nutricionista", sal: "R$ 3.090,43", desc: "Prestar assistência nutricional, organizar, administrar e avaliar unidades de alimentação e dieta.", req: "Nutrição" },
+            { titulo: "Fonoaudiólogo", sal: "R$ 3.189,58", desc: "Atender pacientes para prevenção e reabilitação, utilizando protocolos específicos.", req: "Fonoaudiologia" }
+          ];
+
+          vagas.forEach(vaga => {
+            document.write(`
+              <div class="bg-white p-8 rounded-3xl shadow-lg shadow-slate-200/40 border border-slate-100 flex flex-col md:flex-row gap-6 md:items-center justify-between group hover:border-red-300 transition-colors">
+                <div class="flex-1">
+                  <div class="flex flex-wrap items-center gap-3 mb-3">
+                    <h2 class="text-2xl font-black text-slate-900">${vaga.titulo}</h2>
+                    <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">${vaga.sal}</span>
+                  </div>
+                  <p class="text-slate-600 text-sm mb-4 leading-relaxed">${vaga.desc}</p>
+                  <div class="flex gap-2 text-xs font-medium text-slate-500">
+                    <span class="bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Local: Ceará</span>
+                    <span class="bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">Req: ${vaga.req}</span>
+                  </div>
+                </div>
+                <div class="shrink-0 w-full md:w-auto">
+                  <a href="mailto:rh@athosassessoriaeservicos.com.br?subject=Candidatura: ${vaga.titulo}" class="w-full md:w-auto px-6 py-3 bg-slate-900 hover:bg-red-600 text-white font-bold text-sm rounded-xl transition-all shadow text-center block">
+                    Candidatar-se
+                  </a>
+                </div>
+              </div>
+            `);
+          });
+        </script>
+      </div>
+    </main>
+
+    <!-- 6. PÁGINA COLABORADOR / INTEGRIDADE -->
+    <main id="tab-colaborador" class="tab-content flex-1 max-w-4xl mx-auto px-6 py-16 w-full">
+      <div class="bg-white p-8 sm:p-14 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+        <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-6">Programa de Integridade</h1>
+        <p class="text-slate-600 text-lg leading-relaxed mb-8">
+          Diretrizes, normas e medidas implementadas para prevenir, detectar e remediar ocorrências de desvios éticos praticados na Empresa.
+        </p>
+
+        <!-- Player de Vídeo Original -->
+        <video controls class="w-full aspect-video bg-black rounded-2xl shadow-2xl mb-10 object-contain border border-slate-200" src="https://athosassessoriaeservicos.com.br/wp-content/uploads/2024/11/TREINAMENTO-PROGRAMA-DE-INTEGRIDADE.mp4"></video>
+
+        <div class="text-center">
+          <button class="px-8 py-4 bg-white border-2 border-slate-200 hover:border-red-600 hover:text-red-600 text-slate-700 font-bold rounded-xl transition-all flex items-center justify-center gap-2 mx-auto">
+            <i data-lucide="file-badge-2" class="w-5 h-5"></i>
+            Emitir Comprovante de Treinamento
+          </button>
+        </div>
+      </div>
+    </main>
+
+  </div> <!-- Fim Container -->
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-xs py-8 border-t border-slate-900 mt-auto">
+    <div class="max-w-7xl mx-auto px-6 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4">
+      <span class="font-bold tracking-wider uppercase">Athos Assessoria e Serviços © 2026</span>
+      <span>Ceará, Brasil - Todos os direitos reservados.</span>
+    </div>
+  </footer>
+
+  <!-- Roteamento JS, Ícones e API Fetch para Formulário -->
+  <script>
+    lucide.createIcons();
+
+    // Função centralizada para mudar as abas de forma limpa
+    function mudarAba(hash) {
+      window.location.hash = hash;
+    }
+
+    function navigateToHash() {
+      let hash = window.location.hash.replace('#', '') || 'inicio';
+      const validTabs = ['inicio', 'contato', 'transparencia', 'denuncia', 'vagas', 'colaborador'];
+      if (!validTabs.includes(hash)) hash = 'inicio';
+
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetTab = document.getElementById(`tab-${hash}`);
+      const targetNav = document.querySelector(`.nav-btn[data-tab="${hash}"]`);
+
+      if (targetTab) targetTab.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+
+      window.scrollTo(0, 0);
+      
+      const video = document.querySelector('video');
+      if (video && hash !== 'colaborador') {
+        video.pause();
+      }
+    }
+
+    window.addEventListener('hashchange', navigateToHash);
+    window.addEventListener('DOMContentLoaded', navigateToHash);
+
+    // Envio com Spring Boot + SweetAlert2 profissional
+    async function enviarMensagem(event) {
+      event.preventDefault(); 
+
+      const dados = {
+          nome: document.getElementById('inputNome').value,
+          sobrenome: document.getElementById('inputSobrenome').value,
+          mensagem: document.getElementById('inputMensagem').value
+      };
+
+      try {
+          const resposta = await fetch('http://localhost:8080/api/contatos', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(dados)
+          });
+
+          if(resposta.ok) {
+              Swal.fire({
+                  title: 'Mensagem Enviada!',
+                  text: 'Sua mensagem foi salva com sucesso no sistema da Athos.',
+                  icon: 'success',
+                  confirmButtonText: 'OK',
+                  confirmButtonColor: '#dc2626'
+              });
+
+              document.getElementById('inputNome').value = '';
+              document.getElementById('inputSobrenome').value = '';
+              document.getElementById('inputMensagem').value = '';
+          } else {
+              Swal.fire({
+                  title: 'Erro no Servidor',
+                  text: 'Ocorreu um erro ao salvar a mensagem.',
+                  icon: 'error',
+                  confirmButtonText: 'Tentar Novamente',
+                  confirmButtonColor: '#dc2626'
+              });
+          }
+      } catch (erro) {
+          console.error('Erro de conexão:', erro);
+          Swal.fire({
+              title: 'Erro de Conexão',
+              text: 'Não foi possível conectar com a API (Verifique se o Spring Boot está rodando).',
+              icon: 'warning',
+              confirmButtonText: 'Entendido',
+              confirmButtonColor: '#dc2626'
+          });
+      }
+    }
+  </script>
+</body>
+</html>
