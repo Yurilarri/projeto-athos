@@ -96,7 +96,7 @@
       </nav>
 
       <div class="flex items-center gap-2 flex-shrink-0">
-        <a href="../../portal/portal.html?empresa=athos" class="px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-slate-900 hover:bg-slate-800 text-white transition-all flex items-center gap-2">
+        <a href="../../portal/portal.html?empresa=athos" data-portal="portal.html" class="px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-slate-900 hover:bg-slate-800 text-white transition-all flex items-center gap-2">
           <i data-lucide="user-round" class="w-4 h-4"></i>
           <span class="hidden sm:inline">Portal do Colaborador</span><span class="sm:hidden">Portal</span>
         </a>
@@ -376,8 +376,8 @@
           <p class="text-slate-300 mt-2">Atestados, comunicados do RH, seus dados e a Ouvidoria, tudo pelo celular.</p>
         </div>
         <div class="flex flex-col sm:flex-row gap-3 shrink-0">
-          <a href="../../portal/index.html?empresa=athos" class="px-6 py-3.5 bg-red-600 hover:bg-red-500 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="log-in" class="w-4 h-4"></i> Já tenho login</a>
-          <a href="../../portal/primeiro-acesso.html?empresa=athos" class="px-6 py-3.5 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> Primeiro acesso</a>
+          <a href="../../portal/index.html?empresa=athos" data-portal="index.html" class="px-6 py-3.5 bg-red-600 hover:bg-red-500 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="log-in" class="w-4 h-4"></i> Já tenho login</a>
+          <a href="../../portal/primeiro-acesso.html?empresa=athos" data-portal="primeiro-acesso.html" class="px-6 py-3.5 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> Primeiro acesso</a>
         </div>
       </div>
 
@@ -412,6 +412,35 @@
   <!-- Roteamento JS, Ícones e API Fetch para Formulário -->
   <script>
     lucide.createIcons();
+
+    /* ✏️ EDITE AQUI quando o servidor e o portal forem para a internet */
+    const API = 'http://localhost:8080';     // endereço do servidor Java
+    const PORTAL_NA_INTERNET = '';           // ex.: 'https://portal.suaempresa.com.br/' (vazio = ainda não está no ar)
+    const TELEFONE = '(85) 3103-1104';
+
+    // O site foi aberto no seu computador (VS Code, dois cliques) ou pela internet (GitHub)?
+    const NO_COMPUTADOR = location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+    const SERVIDOR_SO_NO_COMPUTADOR = /localhost|127\.0\.0\.1/.test(API);
+
+    // Botões do Portal do Colaborador (igual aos sites da Conceito, Select e Prime):
+    // no computador abrem o portal do computador; na internet, enquanto o portal não está no ar, mostram um aviso.
+    document.querySelectorAll('[data-portal]').forEach(link => {
+      if (NO_COMPUTADOR) return;
+      if (PORTAL_NA_INTERNET) {
+        link.href = PORTAL_NA_INTERNET + link.dataset.portal + '?empresa=athos';
+        return;
+      }
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        Swal.fire({
+          title: 'Portal em fase de testes',
+          text: 'O Portal do Colaborador está em fase de testes e será liberado em breve.',
+          icon: 'info',
+          confirmButtonText: 'Entendi',
+          confirmButtonColor: '#dc2626'
+        });
+      });
+    });
 
     // Função centralizada para mudar as abas de forma limpa
     function mudarAba(hash) {
@@ -459,9 +488,14 @@
           Swal.fire({ title: 'Como falamos com você?', text: 'Informe um telefone ou um e-mail para a gente responder.', icon: 'info', confirmButtonColor: '#dc2626' });
           return;
       }
+      // Na internet, enquanto o servidor só existe no computador: não tenta enviar (o navegador bloquearia)
+      if (!NO_COMPUTADOR && SERVIDOR_SO_NO_COMPUTADOR) {
+          Swal.fire({ title: 'Envio pelo site em breve', text: 'O envio de mensagens pelo site será ativado em breve. Por enquanto, fale com a gente pelo telefone ' + TELEFONE + '.', icon: 'info', confirmButtonText: 'Entendi', confirmButtonColor: '#dc2626' });
+          return;
+      }
 
       try {
-          const resposta = await fetch('http://localhost:8080/api/contatos', {
+          const resposta = await fetch(API + '/api/contatos', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(dados)
@@ -494,8 +528,9 @@
       } catch (erro) {
           console.error('Erro de conexão:', erro);
           Swal.fire({
-              title: 'Erro de Conexão',
-              text: 'Não foi possível conectar com a API (Verifique se o Spring Boot está rodando).',
+              title: 'Não conseguimos enviar agora',
+              text: NO_COMPUTADOR ? 'O servidor não respondeu. Confira se ele está ligado no IntelliJ.'
+                                  : 'Tente de novo em instantes ou ligue para ' + TELEFONE + '.',
               icon: 'warning',
               confirmButtonText: 'Entendido',
               confirmButtonColor: '#dc2626'
