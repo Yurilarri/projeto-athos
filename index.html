@@ -95,8 +95,12 @@
         </div>
       </nav>
 
-      <div class="hidden lg:flex items-center flex-shrink-0">
-        <a href="#vagas" onclick="mudarAba('vagas')" class="px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg shadow-red-600/25 transition-all flex items-center gap-2">
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a href="../../portal/portal.html?empresa=athos" class="px-4 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-slate-900 hover:bg-slate-800 text-white transition-all flex items-center gap-2">
+          <i data-lucide="user-round" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Portal do Colaborador</span><span class="sm:hidden">Portal</span>
+        </a>
+        <a href="#vagas" onclick="mudarAba('vagas')" class="hidden xl:flex px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white shadow-lg shadow-red-600/25 transition-all items-center gap-2">
           <i data-lucide="briefcase" class="w-4 h-4"></i>
           <span>Trabalhe Conosco</span>
         </a>
@@ -184,6 +188,16 @@
               <div>
                 <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Sobrenome</label>
                 <input type="text" id="inputSobrenome" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Telefone / WhatsApp</label>
+                <input type="tel" id="inputTelefone" inputmode="tel" placeholder="(85) 99999-9999" maxlength="15" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">E-mail</label>
+                <input type="email" id="inputEmail" maxlength="255" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
               </div>
             </div>
             <div>
@@ -354,6 +368,19 @@
 
     <!-- 6. PÁGINA COLABORADOR / INTEGRIDADE -->
     <main id="tab-colaborador" class="tab-content flex-1 max-w-4xl mx-auto px-6 py-16 w-full">
+      <!-- Portal Conecta: o espaço do colaborador no RH -->
+      <div class="bg-slate-900 text-white p-8 sm:p-10 rounded-3xl shadow-xl mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-red-400">Área do colaborador</span>
+          <h2 class="text-2xl sm:text-3xl font-black mt-2">Portal Conecta</h2>
+          <p class="text-slate-300 mt-2">Atestados, comunicados do RH, seus dados e a Ouvidoria, tudo pelo celular.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 shrink-0">
+          <a href="../../portal/index.html?empresa=athos" class="px-6 py-3.5 bg-red-600 hover:bg-red-500 text-white font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="log-in" class="w-4 h-4"></i> Já tenho login</a>
+          <a href="../../portal/primeiro-acesso.html?empresa=athos" class="px-6 py-3.5 bg-white text-slate-900 hover:bg-slate-100 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> Primeiro acesso</a>
+        </div>
+      </div>
+
       <div class="bg-white p-8 sm:p-14 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
         <h1 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-6">Programa de Integridade</h1>
         <p class="text-slate-600 text-lg leading-relaxed mb-8">
@@ -421,10 +448,17 @@
       event.preventDefault(); 
 
       const dados = {
+          empresaSite: 'athos',
           nome: document.getElementById('inputNome').value,
           sobrenome: document.getElementById('inputSobrenome').value,
+          telefone: document.getElementById('inputTelefone').value.replace(/\D/g, ''),
+          email: document.getElementById('inputEmail').value.trim(),
           mensagem: document.getElementById('inputMensagem').value
       };
+      if (!dados.telefone && !dados.email) {
+          Swal.fire({ title: 'Como falamos com você?', text: 'Informe um telefone ou um e-mail para a gente responder.', icon: 'info', confirmButtonColor: '#dc2626' });
+          return;
+      }
 
       try {
           const resposta = await fetch('http://localhost:8080/api/contatos', {
@@ -433,10 +467,11 @@
               body: JSON.stringify(dados)
           });
 
+          const texto = await resposta.text();
           if(resposta.ok) {
               Swal.fire({
                   title: 'Mensagem Enviada!',
-                  text: 'Sua mensagem foi salva com sucesso no sistema da Athos.',
+                  text: 'Recebemos a sua mensagem (protocolo ' + JSON.parse(texto).protocolo + '). Nossa equipe vai responder em breve.',
                   icon: 'success',
                   confirmButtonText: 'OK',
                   confirmButtonColor: '#dc2626'
@@ -445,10 +480,12 @@
               document.getElementById('inputNome').value = '';
               document.getElementById('inputSobrenome').value = '';
               document.getElementById('inputMensagem').value = '';
+              document.getElementById('inputTelefone').value = '';
+              document.getElementById('inputEmail').value = '';
           } else {
               Swal.fire({
-                  title: 'Erro no Servidor',
-                  text: 'Ocorreu um erro ao salvar a mensagem.',
+                  title: 'Confira os dados',
+                  text: texto || 'Ocorreu um erro ao salvar a mensagem.',
                   icon: 'error',
                   confirmButtonText: 'Tentar Novamente',
                   confirmButtonColor: '#dc2626'
