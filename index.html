@@ -4,8 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Athos Assessoria & Serviços Corporativos</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <meta name="description" content="Athos Assessoria e Serviços: excelência em mão de obra terceirizada e assessoria especializada para condomínios, indústrias e empresas no Ceará.">
+  <meta name="theme-color" content="#0F172A">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+  <!-- Prévia ao mandar o link (WhatsApp, Facebook, LinkedIn). Trocar o endereço quando o site tiver domínio próprio. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Athos Assessoria & Serviços">
+  <meta property="og:description" content="Excelência em mão de obra e assessoria especializada. Fortaleza/CE · (85) 3103-1104">
+  <meta property="og:image" content="https://yurilarri.github.io/projeto-athos/img/og-image.png">
+  <meta property="og:url" content="https://yurilarri.github.io/projeto-athos/">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- Versões fixas: se as bibliotecas mudarem, o site não quebra sozinho -->
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <!-- SweetAlert2 para os alertas profissionais -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -126,6 +138,16 @@
                  transition: background-color .2s, color .2s; }
     .item-menu svg { width: 18px; height: 18px; flex: none; opacity: .55; }
     .item-menu { color: #334155; font-weight: 800; font-size: 14px; letter-spacing: .04em; } .item-menu:hover { background: #F8FAFC; } .item-menu.ativo { background: #FEF2F2; color: #DC2626; }
+
+    /* Botão flutuante do WhatsApp (só aparece quando o número está preenchido) */
+    #botao-whatsapp { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 60px; height: 60px; border-radius: 50%;
+                      display: flex; align-items: center; justify-content: center; background: #25D366; color: #fff;
+                      box-shadow: 0 10px 25px rgba(0,0,0,.25); transition: transform .2s ease; }
+    #botao-whatsapp:hover { transform: scale(1.08); }
+    #botao-whatsapp[hidden] { display: none; }
+    #botao-whatsapp::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #25D366; z-index: -1; animation: onda-whats 2.4s ease-out infinite; }
+    @keyframes onda-whats { from { transform: scale(1); opacity: .5; } to { transform: scale(1.6); opacity: 0; } }
+    @media print { #botao-whatsapp { display: none; } }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
@@ -151,7 +173,7 @@
   <header class="sticky top-0 z-50 glass-header border-b border-slate-200/80 shadow-sm">
     <div class="max-w-7xl mx-auto px-6 h-16 lg:h-20 flex items-center justify-between gap-4">
       <a href="#inicio" onclick="mudarAba('inicio')" class="flex-shrink-0 group flex items-center gap-3">
-        <img src="https://athosassessoriaeservicos.com.br/wp-content/uploads/2024/04/cropped-ATHOS-LOGO-2.png" alt="Athos" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+        <img src="img/logo.png" alt="Athos Assessoria e Serviços" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
       </a>
 
       <nav class="hidden lg:block flex-1" aria-label="Seções do site">
@@ -396,14 +418,14 @@
           </p>
         </div>
 
-        <form class="space-y-8">
+        <form class="space-y-8" onsubmit="enviarDenuncia(event)" novalidate>
           <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
             <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Identificação (Opcional)</h3>
+            <p class="-mt-3 text-xs text-slate-500">Deixe em branco para enviar de forma anônima. Só preencha se quiser que a gente fale com você.</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <input type="text" placeholder="Nome Completo" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
-              <input type="tel" placeholder="Telefone" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
-              <input type="text" placeholder="CPF" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
-              <input type="email" placeholder="E-mail" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="text" id="denNome" placeholder="Nome Completo" maxlength="150" autocomplete="name" class="sm:col-span-2 w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="tel" id="denTelefone" placeholder="Telefone" maxlength="20" autocomplete="tel" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
+              <input type="email" id="denEmail" placeholder="E-mail" maxlength="255" autocomplete="email" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 outline-none">
             </div>
           </div>
 
@@ -411,10 +433,10 @@
             <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Motivo da Denúncia *</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <script>
-                ['Fraude / Corrupção', 'Improbidade Administrativa', 'Assédio Moral / Sexual', 'Descumprimento de Normas', 'Conflito de Interesses', 'Outros'].forEach(tipo => {
+                ['Assédio moral ou sexual', 'Discriminação', 'Fraude ou corrupção', 'Descumprimento de normas', 'Conflito de interesses', 'Outros'].forEach(tipo => {
                   document.write(`
                     <label class="flex items-center gap-3 p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
-                      <input type="radio" name="motivo" class="w-4 h-4 accent-red-600">
+                      <input type="radio" name="motivo" value="${tipo}" class="w-4 h-4 accent-red-600">
                       <span class="text-sm text-slate-700 font-medium">${tipo}</span>
                     </label>
                   `);
@@ -425,10 +447,13 @@
 
           <div>
             <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Relato do Fato *</h3>
-            <textarea required rows="6" placeholder="Descreva os detalhes: o que aconteceu, quem estava envolvido, quando e onde ocorreu..." class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 outline-none text-sm resize-none"></textarea>
+            <textarea id="denRelato" rows="6" maxlength="5000" placeholder="Descreva os detalhes: o que aconteceu, quem estava envolvido, quando e onde ocorreu..." class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 outline-none text-sm resize-none"></textarea>
           </div>
 
-          <button type="button" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/30 transition-all flex justify-center items-center gap-2">
+          <!-- armadilha para robôs: pessoa de verdade não vê nem preenche -->
+          <input type="text" id="denSite" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/30 transition-all flex justify-center items-center gap-2">
             <i data-lucide="lock" class="w-4 h-4"></i> Enviar Denúncia de Forma Segura
           </button>
         </form>
@@ -519,6 +544,9 @@
     </div>
   </footer>
 
+  <!-- Botão do WhatsApp: aparece sozinho quando o número for colocado no bloco EDITE AQUI -->
+  <a id="botao-whatsapp" target="_blank" rel="noopener" aria-label="Falar no WhatsApp" title="Falar no WhatsApp" hidden><svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M16.04 3C8.86 3 3.03 8.82 3.03 16c0 2.3.6 4.54 1.75 6.52L3 29l6.65-1.74A12.95 12.95 0 0 0 16.04 29C23.2 29 29 23.18 29 16S23.2 3 16.04 3Zm0 23.62c-1.98 0-3.92-.53-5.61-1.54l-.4-.24-3.95 1.03 1.05-3.85-.26-.4A10.6 10.6 0 0 1 5.4 16c0-5.86 4.77-10.63 10.64-10.63 5.86 0 10.6 4.77 10.6 10.63 0 5.87-4.75 10.62-10.6 10.62Zm5.83-7.95c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1.01 1.25-.18.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.21-.18-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.53.1-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.53-.72-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.66 0 1.57 1.14 3.08 1.3 3.3.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.89-.77 2.15-1.52.27-.74.27-1.38.19-1.52-.08-.13-.29-.21-.61-.37Z"/></svg></a>
+
   <!-- Roteamento JS, Ícones e API Fetch para Formulário -->
   <script>
     lucide.createIcons();
@@ -527,6 +555,14 @@
     const API = 'http://localhost:8080';     // endereço do servidor Java
     const PORTAL_NA_INTERNET = '';           // ex.: 'https://portal.suaempresa.com.br/' (vazio = ainda não está no ar)
     const TELEFONE = '(85) 3103-1104';
+    const WHATSAPP = '';                     // TROCAR: WhatsApp com DDD, ex.: '5585999999999' (vazio = botão escondido)
+
+    // Botão do WhatsApp: só aparece com o número preenchido acima
+    if (WHATSAPP.replace(/\D/g, '').length >= 12) {
+      const zap = document.getElementById('botao-whatsapp');
+      zap.href = 'https://wa.me/' + WHATSAPP.replace(/\D/g, '') + '?text=' + encodeURIComponent('Olá! Vim pelo site da Athos e gostaria de mais informações.');
+      zap.hidden = false;
+    }
 
     // O site foi aberto no seu computador (VS Code, dois cliques) ou pela internet (GitHub)?
     const NO_COMPUTADOR = location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname);
@@ -644,6 +680,56 @@
               icon: 'warning',
               confirmButtonText: 'Entendido',
               confirmButtonColor: '#dc2626'
+          });
+      }
+    }
+
+    // Canal de Denúncia: envia de verdade para a Ouvidoria do Painel do DP (pode ser anônima)
+    async function enviarDenuncia(event) {
+      event.preventDefault();
+      const form = event.target;
+      const marcado = form.querySelector('input[name=motivo]:checked');
+      const relato = document.getElementById('denRelato').value.trim();
+      if (!marcado) {
+          Swal.fire({ title: 'Escolha o motivo', text: 'Marque o motivo da denúncia.', icon: 'info', confirmButtonColor: '#dc2626' });
+          return;
+      }
+      if (relato.length < 10) {
+          Swal.fire({ title: 'Conte o que aconteceu', text: 'Escreva o relato com pelo menos algumas palavras.', icon: 'info', confirmButtonColor: '#dc2626' });
+          return;
+      }
+      // Na internet, enquanto o servidor só existe no computador: não tenta enviar (o navegador bloquearia)
+      if (!NO_COMPUTADOR && SERVIDOR_SO_NO_COMPUTADOR) {
+          Swal.fire({ title: 'Envio pelo site em breve', text: 'O envio de denúncias pelo site será ativado em breve. Por enquanto, ligue para ' + TELEFONE + '.', icon: 'info', confirmButtonText: 'Entendi', confirmButtonColor: '#dc2626' });
+          return;
+      }
+      const dados = {
+          empresaSite: 'athos', motivo: marcado.value, relato,
+          nome: document.getElementById('denNome').value.trim(),
+          telefone: document.getElementById('denTelefone').value.trim(),
+          email: document.getElementById('denEmail').value.trim(),
+          site: document.getElementById('denSite').value
+      };
+      try {
+          const resposta = await fetch(API + '/api/denuncias', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(dados)
+          });
+          const texto = await resposta.text();
+          if (resposta.ok) {
+              const protocolo = String(JSON.parse(texto).protocolo).replace(/[^A-Z0-9-]/g, '');
+              Swal.fire({ title: 'Denúncia enviada', html: 'Seu protocolo é <b>' + protocolo + '</b>.<br>Guarde este número.', icon: 'success', confirmButtonText: 'OK', confirmButtonColor: '#dc2626' });
+              form.reset();
+          } else {
+              Swal.fire({ title: 'Confira os dados', text: texto || 'Não foi possível enviar a denúncia.', icon: 'error', confirmButtonText: 'Tentar Novamente', confirmButtonColor: '#dc2626' });
+          }
+      } catch (erro) {
+          Swal.fire({
+              title: 'Não conseguimos enviar agora',
+              text: NO_COMPUTADOR ? 'O servidor não respondeu. Confira se ele está ligado no IntelliJ.'
+                                  : 'Tente de novo em instantes ou ligue para ' + TELEFONE + '.',
+              icon: 'warning', confirmButtonText: 'Entendido', confirmButtonColor: '#dc2626'
           });
       }
     }
