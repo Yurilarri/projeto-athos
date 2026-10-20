@@ -107,6 +107,25 @@
     @keyframes fita { to { stroke-dashoffset: 0; } }
     @media (prefers-reduced-motion: reduce) { #progresso { display: none; } html [data-revelar], .linha-titulo > span { opacity: 1 !important; transform: none !important; animation: none !important; }
                                               .fita-athos path { stroke-dashoffset: 0; animation: none; } .letreiro, .reflexo::after, .grade-tech { animation: none !important; } }
+
+    /* ===== Menu do celular: três barrinhas que viram um X ===== */
+    .hamburguer { position: relative; display: inline-block; width: 22px; height: 16px; }
+    .hamburguer span { position: absolute; left: 0; width: 100%; height: 2.5px; border-radius: 2px; background: currentColor;
+                       transition: transform .3s ease, opacity .2s ease, top .3s ease; }
+    .hamburguer span:nth-child(1) { top: 0; }
+    .hamburguer span:nth-child(2) { top: 6.75px; }
+    .hamburguer span:nth-child(3) { top: 13.5px; }
+    [aria-expanded="true"] .hamburguer span:nth-child(1) { top: 6.75px; transform: rotate(45deg); }
+    [aria-expanded="true"] .hamburguer span:nth-child(2) { opacity: 0; }
+    [aria-expanded="true"] .hamburguer span:nth-child(3) { top: 6.75px; transform: rotate(-45deg); }
+    .menu-celular { position: absolute; left: 0; right: 0; top: 100%; max-height: calc(100vh - 100%); max-height: calc(100dvh - 100%);
+                    overflow-y: auto; overscroll-behavior: contain; animation: descer .28s cubic-bezier(.16,1,.3,1); }
+    .menu-celular[hidden], #menu-fundo[hidden] { display: none; }
+    @keyframes descer { from { opacity: 0; transform: translateY(-10px); } }
+    .item-menu { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px; border-radius: 10px;
+                 transition: background-color .2s, color .2s; }
+    .item-menu svg { width: 18px; height: 18px; flex: none; opacity: .55; }
+    .item-menu { color: #334155; font-weight: 800; font-size: 14px; letter-spacing: .04em; } .item-menu:hover { background: #F8FAFC; } .item-menu.ativo { background: #FEF2F2; color: #DC2626; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
@@ -130,12 +149,12 @@
 
   <!-- Header & Navegação -->
   <header class="sticky top-0 z-50 glass-header border-b border-slate-200/80 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between gap-4">
+    <div class="max-w-7xl mx-auto px-6 h-16 lg:h-20 flex items-center justify-between gap-4">
       <a href="#inicio" onclick="mudarAba('inicio')" class="flex-shrink-0 group flex items-center gap-3">
         <img src="https://athosassessoriaeservicos.com.br/wp-content/uploads/2024/04/cropped-ATHOS-LOGO-2.png" alt="Athos" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
       </a>
 
-      <nav class="flex-1 overflow-x-auto no-scrollbar lg:overflow-visible">
+      <nav class="hidden lg:block flex-1" aria-label="Seções do site">
         <div class="flex items-center lg:justify-center space-x-6 lg:space-x-8 text-[13px] font-bold text-slate-600 whitespace-nowrap px-2">
           <a href="#inicio" onclick="mudarAba('inicio')" class="nav-btn py-7 transition-colors hover:text-red-600 active" data-tab="inicio">SOBRE NÓS</a>
           <a href="#contato" onclick="mudarAba('contato')" class="nav-btn py-7 transition-colors hover:text-red-600" data-tab="contato">CONTATO</a>
@@ -155,9 +174,22 @@
           <i data-lucide="briefcase" class="w-4 h-4"></i>
           <span>Trabalhe Conosco</span>
         </a>
+        <button type="button" id="menu-botao" class="lg:hidden w-11 h-11 rounded-lg flex items-center justify-center text-slate-900 hover:bg-slate-100 transition-colors" aria-label="Abrir o menu" aria-expanded="false" aria-controls="menu-celular"><span class="hamburguer" aria-hidden="true"><span></span><span></span><span></span></span></button>
       </div>
     </div>
+    <!-- Menu do celular (abre pelas três barrinhas) -->
+    <div id="menu-celular" class="menu-celular lg:hidden bg-white border-b border-slate-200 shadow-xl" hidden>
+      <nav class="max-w-7xl mx-auto px-4 py-3" aria-label="Menu do site">
+        <ul id="menu-celular-lista" class="grid gap-1"></ul>
+        <div class="mt-3 mb-2 pt-4 border-t border-slate-200 grid gap-3 px-2">
+          <a href="../../portal/portal.html?empresa=athos" data-portal="portal.html" class="px-5 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm flex items-center justify-center gap-2"><i data-lucide="user-round" class="w-4 h-4"></i> Portal do Colaborador</a>
+          <a href="#vagas" class="px-5 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-sm flex items-center justify-center gap-2"><i data-lucide="briefcase" class="w-4 h-4"></i> Trabalhe Conosco</a>
+          <a href="tel:+558531031104" class="flex items-center justify-center gap-2 py-2 text-sm font-semibold text-slate-600"><i data-lucide="phone" class="w-4 h-4 text-red-600"></i> (85) 3103-1104</a>
+        </div>
+      </nav>
+    </div>
   </header>
+  <div id="menu-fundo" class="fixed inset-0 z-40 bg-slate-900/40 lg:hidden" hidden></div>
 
   <!-- ==================== CONTAINER DE PÁGINAS ==================== -->
   <div class="flex-1 flex flex-col">
@@ -683,6 +715,48 @@
       medir();
       // Faixa: repete a lista para correr sem emenda
       document.querySelectorAll('.letreiro').forEach(l => { l.innerHTML += l.innerHTML; });
+    })();
+  </script>
+
+  <!-- Menu do celular (três barrinhas): mostra todas as partes do site numa lista -->
+  <script>
+    (() => {
+      const botao = document.getElementById('menu-botao'), painel = document.getElementById('menu-celular');
+      const lista = document.getElementById('menu-celular-lista'), fundo = document.getElementById('menu-fundo');
+      if (!botao || !painel || !lista) return;
+      // Os mesmos itens do menu do computador (assim, mudou lá, muda aqui)
+      lista.innerHTML = [...document.querySelectorAll('header nav .nav-btn')].map(a =>
+        `<li><a href="${a.getAttribute('href')}" data-tab="${a.dataset.tab}" class="item-menu ">${a.textContent.trim()}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>`).join('');
+      const marcar = () => {
+        const aba = document.querySelector('.tab-content.active');
+        const atual = aba ? aba.id.replace('tab-', '') : 'inicio';
+        lista.querySelectorAll('a').forEach(a => {
+          const ativo = a.dataset.tab === atual;
+          a.classList.toggle('ativo', ativo);
+          if (ativo) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+        });
+      };
+      const abrir = () => {
+        marcar();
+        painel.hidden = false; fundo.hidden = false;
+        botao.setAttribute('aria-expanded', 'true'); botao.setAttribute('aria-label', 'Fechar o menu');
+        document.body.style.overflow = 'hidden';
+        const primeiro = lista.querySelector('a');
+        if (primeiro) primeiro.focus({ preventScroll: true });
+      };
+      const fechar = (devolverFoco) => {
+        if (painel.hidden) return;
+        painel.hidden = true; fundo.hidden = true;
+        botao.setAttribute('aria-expanded', 'false'); botao.setAttribute('aria-label', 'Abrir o menu');
+        document.body.style.overflow = '';
+        if (devolverFoco) botao.focus();
+      };
+      botao.addEventListener('click', () => (painel.hidden ? abrir() : fechar(true)));
+      fundo.addEventListener('click', () => fechar(false));
+      painel.addEventListener('click', (e) => { if (e.target.closest('a')) fechar(false); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') fechar(true); });
+      addEventListener('resize', () => { if (innerWidth >= 1024) fechar(false); });
+      addEventListener('hashchange', () => setTimeout(marcar, 0));
     })();
   </script>
 </body>
