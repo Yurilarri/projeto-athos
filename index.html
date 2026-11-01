@@ -470,6 +470,7 @@
       <div class="mb-12" data-revelar>
         <h1 class="text-4xl font-black text-slate-900 tracking-tight">Oportunidades em Aberto</h1>
         <p class="text-slate-600 text-lg mt-2">Venha fazer parte da equipe Athos. Estamos contratando no Ceará.</p>
+        <button type="button" onclick="document.getElementById('enviar-curriculo').scrollIntoView({ behavior: 'smooth' })" class="mt-4 text-sm font-bold text-red-600 hover:text-red-700 underline underline-offset-4">Não achou a sua vaga? Envie seu currículo</button>
       </div>
 
       <div class="space-y-6" data-revelar-grupo>
@@ -504,6 +505,52 @@
           });
         </script>
       </div>
+
+      <!-- Banco de talentos: a pessoa diz o que faz e o e-mail dela abre pronto, é só anexar o currículo -->
+      <section id="enviar-curriculo" class="mt-10 scroll-mt-28 bg-white p-8 sm:p-10 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100" data-revelar>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900">Não achou a sua vaga? Envie seu currículo</h2>
+        <p class="text-slate-600 mt-2 mb-8 leading-relaxed">Conte o que você faz e mande o seu currículo. O RH da Athos analisa e entra em contato se houver uma oportunidade para você.</p>
+
+        <form id="formCurriculo" onsubmit="enviarCurriculo(event)" class="space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="sm:col-span-2">
+              <label for="curNome" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Nome completo</label>
+              <input id="curNome" type="text" required maxlength="150" autocomplete="name" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+            </div>
+            <div>
+              <label for="curTelefone" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Telefone ou WhatsApp</label>
+              <input id="curTelefone" type="tel" required maxlength="20" autocomplete="tel" placeholder="(85) 99999-9999" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+            </div>
+            <div>
+              <label for="curFuncao" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Em que você trabalha?</label>
+              <input id="curFuncao" type="text" required maxlength="100" placeholder="Ex.: porteiro, auxiliar de limpeza" class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all text-sm">
+            </div>
+          </div>
+          <label class="flex items-start gap-3 text-sm text-slate-600 cursor-pointer">
+            <input type="checkbox" required class="mt-1 w-4 h-4 flex-none">
+            <span>Li e estou ciente da <a href="docs/privacidade.html" target="_blank" rel="noopener" class="underline font-semibold">Política de Privacidade</a>.</span>
+          </label>
+          <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-slate-900 hover:bg-red-600 text-white font-bold text-sm rounded-xl transition-all shadow-lg">
+            Enviar meu currículo
+          </button>
+          <p class="text-xs text-slate-500">Depois de clicar, o seu e-mail abre com a mensagem pronta. É só anexar o currículo e enviar.</p>
+        </form>
+
+        <div id="curProximoPasso" class="hidden" role="status">
+          <div class="p-6 bg-green-50 border border-green-200 rounded-2xl">
+            <p class="font-black text-slate-900">Falta só anexar o currículo</p>
+            <p class="text-sm text-slate-700 mt-2 leading-relaxed">No seu e-mail, a mensagem já está pronta. Anexe o arquivo do currículo (PDF, Word ou uma foto dele) e envie.</p>
+          </div>
+          <p class="font-bold text-slate-900 mt-6 mb-3">O e-mail não abriu?</p>
+          <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+            <a id="curAbrirEmail" class="px-5 py-3 bg-white border border-slate-300 hover:border-red-400 text-slate-800 font-bold text-sm rounded-xl transition-all text-center">Abrir meu e-mail</a>
+            <a id="curAbrirGmail" target="_blank" rel="noopener" class="px-5 py-3 bg-white border border-slate-300 hover:border-red-400 text-slate-800 font-bold text-sm rounded-xl transition-all text-center">Abrir no Gmail</a>
+            <button type="button" onclick="copiarEmailRh(this)" class="px-5 py-3 bg-white border border-slate-300 hover:border-red-400 text-slate-800 font-bold text-sm rounded-xl transition-all text-center">Copiar o endereço</button>
+          </div>
+          <p class="text-sm text-slate-600 mt-4 break-words">Ou envie direto para <strong id="curEnderecoRh"></strong>.</p>
+          <button type="button" onclick="voltarCurriculo()" class="mt-5 text-sm font-bold text-red-600 hover:text-red-700 underline underline-offset-4">Voltar e corrigir os dados</button>
+        </div>
+      </section>
     </main>
 
     <!-- 6. PÁGINA COLABORADOR / INTEGRIDADE -->
@@ -560,6 +607,7 @@
     const API = 'http://localhost:8080';     // endereço do servidor Java
     const PORTAL_NA_INTERNET = '';           // ex.: 'https://portal.suaempresa.com.br/' (vazio = ainda não está no ar)
     const TELEFONE = '(85) 3103-1104';
+    const EMAIL_RH = 'rh@athosassessoriaeservicos.com.br';   // recebe os currículos
     const WHATSAPP = '';                     // TROCAR: WhatsApp com DDD, ex.: '5585999999999' (vazio = botão escondido)
 
     // Botão do WhatsApp: só aparece com o número preenchido acima
@@ -624,6 +672,52 @@
     window.addEventListener('DOMContentLoaded', navigateToHash);
 
     // Envio com Spring Boot + SweetAlert2 profissional
+    // Currículo: monta o e-mail com os dados da pessoa e abre o aplicativo de e-mail dela.
+    // Nada passa pelo nosso servidor: o currículo vai direto da pessoa para o RH.
+    function enviarCurriculo(event) {
+      event.preventDefault();
+      const nome = document.getElementById('curNome').value.trim().replace(/\s+/g, ' ');
+      const telefone = document.getElementById('curTelefone').value.trim();
+      const funcao = document.getElementById('curFuncao').value.trim().replace(/\s+/g, ' ');
+      if (nome.length < 3 || !funcao) {
+        Swal.fire({ title: 'Faltou preencher', text: 'Informe o seu nome completo e em que você trabalha.', icon: 'info', confirmButtonColor: '#dc2626' });
+        return;
+      }
+      if (telefone.replace(/\D/g, '').length < 10) {
+        Swal.fire({ title: 'Confira o telefone', text: 'Informe o telefone com DDD, para o RH falar com você.', icon: 'info', confirmButtonColor: '#dc2626' });
+        return;
+      }
+
+      const assunto = 'Currículo - ' + funcao + ' - ' + nome;
+      const corpo = 'Olá! Quero enviar o meu currículo para o RH da Athos.\r\n\r\n'
+        + 'Nome: ' + nome + '\r\nTelefone: ' + telefone + '\r\nEm que trabalho: ' + funcao + '\r\n\r\n'
+        + 'O meu currículo está em anexo.\r\n';
+      const parametros = (assuntoNome) => assuntoNome + '=' + encodeURIComponent(assunto) + '&body=' + encodeURIComponent(corpo);
+
+      const linkEmail = document.getElementById('curAbrirEmail');
+      linkEmail.href = 'mailto:' + EMAIL_RH + '?' + parametros('subject');
+      document.getElementById('curAbrirGmail').href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(EMAIL_RH) + '&' + parametros('su');
+      document.getElementById('curEnderecoRh').textContent = EMAIL_RH;
+      document.getElementById('formCurriculo').classList.add('hidden');
+      document.getElementById('curProximoPasso').classList.remove('hidden');
+      document.getElementById('enviar-curriculo').scrollIntoView({ behavior: 'smooth' });
+      linkEmail.click();
+    }
+
+    function voltarCurriculo() {
+      document.getElementById('curProximoPasso').classList.add('hidden');
+      document.getElementById('formCurriculo').classList.remove('hidden');
+    }
+
+    async function copiarEmailRh(botao) {
+      try {
+        await navigator.clipboard.writeText(EMAIL_RH);
+        botao.textContent = 'Endereço copiado';
+      } catch (erro) {
+        botao.textContent = 'Copie o endereço abaixo';
+      }
+    }
+
     async function enviarMensagem(event) {
       event.preventDefault(); 
 
