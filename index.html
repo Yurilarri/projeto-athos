@@ -19,7 +19,7 @@
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <!-- SweetAlert2 para os alertas profissionais -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.25/dist/sweetalert2.all.min.js" integrity="sha384-nLoOnA/BDh8A/jxqtckg4DumuCGOBYUnNJLZdQz/zfYNp3wcjGSoWTAzgko06G/2" crossorigin="anonymous"></script>
   <style>
     body { -webkit-tap-highlight-color: transparent; }
     
@@ -238,7 +238,7 @@
         <div class="relative z-10 max-w-7xl mx-auto px-6 py-32 md:py-40 text-center">
           <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tracking-widest uppercase mb-6 surgir">
             <i data-lucide="award" class="w-4 h-4 text-red-500"></i>
-            <span>Referência em Terceirização</span>
+            <span>Soluções em Terceirização</span>
           </div>
           
           <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight max-w-5xl mx-auto leading-[1.1]">
@@ -395,14 +395,13 @@
             { title: "Transparência Salarial 1º Sem/2026", icon: "download" }
           ];
           
+          // Os documentos ainda não foram publicados: aparecem como "Em breve" (e não como link que não abre nada)
           docs.forEach(doc => {
             document.write(`
-              <a href="#" class="group p-6 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all flex items-center justify-between">
-                <span class="text-sm font-bold text-slate-700 group-hover:text-red-600 transition-colors">${doc.title}</span>
-                <div class="w-10 h-10 rounded-full bg-slate-50 group-hover:bg-red-50 flex items-center justify-center transition-colors shrink-0">
-                  <i data-lucide="${doc.icon}" class="w-4 h-4 text-slate-400 group-hover:text-red-600"></i>
-                </div>
-              </a>
+              <div class="p-6 bg-white border border-slate-200 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+                <span class="text-sm font-bold text-slate-700">${doc.title}</span>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-2.5 py-1 rounded shrink-0">Em breve</span>
+              </div>
             `);
           });
         </script>
@@ -578,9 +577,9 @@
         <video controls class="w-full aspect-video bg-black rounded-2xl shadow-2xl mb-10 object-contain border border-slate-200" src="https://athosassessoriaeservicos.com.br/wp-content/uploads/2024/11/TREINAMENTO-PROGRAMA-DE-INTEGRIDADE.mp4"></video>
 
         <div class="text-center">
-          <button class="px-8 py-4 bg-white border-2 border-slate-200 hover:border-red-600 hover:text-red-600 text-slate-700 font-bold rounded-xl transition-all flex items-center justify-center gap-2 mx-auto">
+          <button type="button" disabled aria-disabled="true" class="px-8 py-4 bg-slate-100 border-2 border-slate-200 text-slate-400 font-bold rounded-xl flex items-center justify-center gap-2 mx-auto cursor-not-allowed">
             <i data-lucide="file-badge-2" class="w-5 h-5"></i>
-            Emitir Comprovante de Treinamento
+            Comprovante de Treinamento: em breve
           </button>
         </div>
       </div>
@@ -594,6 +593,7 @@
       <span class="font-bold tracking-wider uppercase">Athos Assessoria e Serviços © 2026</span>
       <span>Ceará, Brasil - Todos os direitos reservados. <a href="docs/privacidade.html" target="_blank" rel="noopener" class="underline hover:text-white">Política de Privacidade</a></span>
     </div>
+  <div class="max-w-7xl mx-auto px-6 pb-8 text-center text-[11px] opacity-80">Athos Assessoria e Serviços Terceirizados Ltda · CNPJ 11.774.942/0001-43 · Rua Edgar Pinho Filho, 360, Vila União · Fortaleza/CE</div>
   </footer>
 
   <!-- Botão do WhatsApp: aparece sozinho quando o número for colocado no bloco EDITE AQUI -->
